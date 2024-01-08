@@ -1,72 +1,65 @@
 // Імпорт компонентів
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import Statistics from './feedback-component/feedback-statistic/FeedbackStatistics';
 import FeedbackOptions from './feedback-component/feedback-options/FeedbackOptions';
 import Section from './feedback-component/feedback-section/FeedbackSection';
 import Notification from './feedback-component/feedback-notification/FeedbackNotification';
 import { Container, CssBaseline, Typography } from '@mui/material';
-
-// Основний клас застосунку
-class App extends Component {
-  state = {
+// Основна функція застосунку
+const App = () => {
+  const [feedbackState, setFeedbackState] = useState({
     good: 0,
     neutral: 0,
     bad: 0,
-  };
-
-  handleFeedback = option => {
-    this.setState(prevState => ({
-      ...prevState,
-      [option]: prevState[option] + 1,
+  });
+  // Відображення фідбеку
+  const handleFeedback = option => {
+    setFeedbackState(prevCounts => ({
+      ...prevCounts,
+      [option]: prevCounts[option] + 1,
     }));
   };
-
-  handleClearStatistics = () => {
-    this.setState({
+  // Очищення фідбеку
+  const handleClearStatistics = () => {
+    setFeedbackState({
       good: 0,
       neutral: 0,
       bad: 0,
     });
   };
 
-  render() {
-    const { good, neutral, bad } = this.state;
-    const total = good + neutral + bad;
-    const options = Object.keys(this.state);
+  const { good, neutral, bad } = feedbackState;
+  const total = good + neutral + bad;
+  const options = Object.keys(feedbackState);
 
-    return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <div>
-          <Typography variant="h4" align="center" gutterBottom>
-            Feedback App
-          </Typography>
-          <Section title="Leave feedback">
-            <FeedbackOptions
-              options={options}
-              onLeaveFeedback={this.handleFeedback}
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div>
+        <Typography variant="h4" align="center" gutterBottom>
+          Feedback App
+        </Typography>
+        <Section title="Leave feedback">
+          <FeedbackOptions options={options} onLeaveFeedback={handleFeedback} />
+        </Section>
+
+        <Section title="Statistics">
+          {total > 0 ? (
+            <Statistics
+              good={good}
+              neutral={neutral}
+              bad={bad}
+              total={total}
+              positivePercentage={(good / total) * 100}
+              onClearStatistics={handleClearStatistics}
             />
-          </Section>
-
-          <Section title="Statistics">
-            {total > 0 ? (
-              <Statistics
-                good={good}
-                neutral={neutral}
-                bad={bad}
-                total={total}
-                positivePercentage={(good / total) * 100}
-                onClearStatistics={this.handleClearStatistics}
-              />
-            ) : (
-              <Notification message="There is no feedback" />
-            )}
-          </Section>
-        </div>
-      </Container>
-    );
-  }
-}
-
+          ) : (
+            <Notification message="There is no feedback" />
+          )}
+        </Section>
+      </div>
+    </Container>
+  );
+};
 // Експорт
 export default App;
