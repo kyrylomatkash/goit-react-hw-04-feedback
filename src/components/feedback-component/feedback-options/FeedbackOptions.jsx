@@ -2,7 +2,7 @@
 import React from 'react';
 import { StyledButtonGroup, StyledButton } from './feedbackoptionsstyles';
 // Функція фідбеку для кнопок
-const FeedbackOptions = ({ options, onLeaveFeedback }) => {
+const FeedbackOptions = ({ options, onLeaveFeedback }) => (
   <StyledButtonGroup>
     {options.map(option => (
       <StyledButton
@@ -13,7 +13,7 @@ const FeedbackOptions = ({ options, onLeaveFeedback }) => {
         {option}
       </StyledButton>
     ))}
-  </StyledButtonGroup>;
-};
+  </StyledButtonGroup>
+);
 // Експорт
 export default FeedbackOptions;
